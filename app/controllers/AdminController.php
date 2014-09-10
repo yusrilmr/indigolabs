@@ -542,8 +542,8 @@ class AdminController extends BaseController {
 	public function storeRunning(){		
 		$durasi = Input::get('running_duration');			
 		
-		$dtStart = date("Y-m-d H:i:s",time() + 25200);
-		$dtEnd = date("Y-m-d H:i:s",time() + (25200+($durasi*60)));
+		$dtStart = date("Y-m-d H:i:s",time() );
+		$dtEnd = date("Y-m-d H:i:s",time() + (($durasi*60)));
 		
 		$run			= new Running;
 		$run			->running_start = $dtStart;

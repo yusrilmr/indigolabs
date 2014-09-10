@@ -22,7 +22,7 @@ class PraktikanController extends BaseController {
 	public function showWelcome()
 	{
 		
-		$data = DB::table('view_dataJadwal')->get();
+		$data = DB::table('view_datajadwal')->get();
 			
 		$user_name 		= Session::get('user_name');
 		$user			= DB::table('tb_user')->where('user_name','=', $user_name)->first();
@@ -32,7 +32,7 @@ class PraktikanController extends BaseController {
 			->join('tb_detail_jadwal_praktikan', 'tb_detail_jadwal_praktikan.praktikan_nim', '=', 'tb_praktikan.praktikan_nim')
 			->join('tb_jadwal', 'tb_detail_jadwal_praktikan.jadwal_id', '=', 'tb_jadwal.jadwal_id')			
 			->join('tb_praktikum', 'tb_praktikum.praktikum_id', '=', 'tb_jadwal.praktikum_id')
-			->select('tb_praktikum.praktikum_id', 'tb_praktikum.praktikum_nama','tb_jadwal.jadwal_jam_mulai','tb_jadwal.jadwal_hari', 'tb_jadwal.jadwal_jam_selesai', 'tb_jadwal.jadwal_tanggal')
+			->select('tb_praktikum.praktikum_id', 'tb_praktikum.praktikum_nama','tb_jadwal.jadwal_jam_mulai','tb_jadwal.jadwal_hari', 'tb_jadwal.jadwal_jam_selesai')
 			->where('tb_user.user_id','=',$this->cekUser())
 			->get();
 		return View::make('dashboard.praktikan.praktikan_index')->with('data', $data)->with('jadwal', $jadwal);

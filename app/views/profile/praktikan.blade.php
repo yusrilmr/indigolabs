@@ -1,5 +1,5 @@
 @include('header')
-@include('menu')
+@include('dashboard/praktikan/menu_praktikan')
 	<link rel="stylesheet" type="text/css" href="js/bootstrap-fileupload/bootstrap-fileupload.css" />
     <link href="css/style.css" rel="stylesheet">
     <link href="css/style-responsive.css" rel="stylesheet" />
@@ -47,7 +47,7 @@
 	                                            <h4 class="modal-title">Edit Password</h4>
 	                                        </div>
 	                                        <div class="modal-body">
-	                                        	{{Form::open(array('url' => 'editPass', 'method'=>'post',  'role' => 'form', 'class' => 'form-horizontal'))}}
+	                                        	{{Form::open(array('url' => 'profile/editPass', 'method'=>'post',  'role' => 'form', 'class' => 'form-horizontal'))}}
 	                                        		<div class="form-group">
 	                                        			{{Form::label('old-pass', 'Old Password', array('class' => 'col-lg-4 control-label'))}}
 	                                        			<div class="col-lg-7">
@@ -87,11 +87,6 @@
 					<header class="panel-heading tab-bg-dark-navy-blue ">
                         <ul class="nav nav-tabs">
                             <li class="active">
-                                <a data-toggle="tab" href="#praktikum">
-                                    Praktikum
-                                </a>
-                            </li>
-                            <li>
                                 <a data-toggle="tab" href="#profile">
                                     Profile
                                 </a>
@@ -106,16 +101,7 @@
 
                     <div class="panel-body">
                         <div class="tab-content tasi-tab">
-                        	<div id="praktikum" class="tab-pane active">
-	                        	<div class="row">
-	                        		<div class="col-md-12">
-	                        			<div class="prf-contacts sttng">
-		                                    <h2 class="text-center">Contoh Praktikum</h2>
-		                                </div>
-	                        		</div>
-	                        	</div>
-	                        </div>
-                        	<div id="profile" class="tab-pane ">
+                        	<div id="profile" class="tab-pane active">
 	                        	<div class="row">
 	                        		<div class="col-md-12">
 	                        			<div class="prf-contacts sttng">
@@ -180,7 +166,7 @@
 	                       	</div>
 	                       	<div id="edit" class="tab-pane ">
 	                        	<div class="position-center">
-		                            {{Form::open(array('url' => 'editProfile', 'method' => 'post', 'class' => 'form-horizontal', 'role' => 'form', 'files' => true))}}
+		                            {{Form::open(array('url' => 'profile/editProfile', 'method' => 'post', 'class' => 'form-horizontal', 'role' => 'form', 'files' => true))}}
 		                            <div class="prf-contacts sttng">
 										<h2>Data Pribadi</h2>
 		                            </div>

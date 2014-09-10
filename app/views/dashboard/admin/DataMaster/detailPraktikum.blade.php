@@ -1,5 +1,5 @@
 @include('header')
-@include('menu')
+@include('dashboard/admin/menu_admin')
 <!--main content start-->
     <section id="main-content">
         <section class="wrapper">
@@ -62,7 +62,9 @@
                                         <tr class="">
                                             <td><?php echo $i?></td>
                                             <td>{{ $modul->modul_nama }}</td>
-                                            <td><button class="btn btn-success">Detail</button></td>
+                                            <td>
+
+                                            <a class="btn btn-success" href="/lab/{{$labs->lab_id}}/praktikum/{{$praktikum->praktikum_id}}/modul/{{$modul->modul_id}}/listsoal">Detail</a></td>
                                             <td>
                                                 <button onclick="getEdit('{{$modul->modul_id}}','{{$modul->modul_nama}}');" type="button" data-toggle="modal" href="#myModal-2" class="btn btn-warning">Edit</button>
                                             </td>

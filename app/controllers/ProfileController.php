@@ -1,7 +1,9 @@
 <?php
-class ProfileController extends HomeController{
+class ProfileController extends HomeController
+{
 
-	public function __construct(){
+	public function __construct()
+	{
 		$this->beforeFilter(function()
 		{
 			if(Session::get('user_name')==null){
@@ -10,32 +12,44 @@ class ProfileController extends HomeController{
 		});
 	}
 
-	public function showAsisten(){
+	public function showAsisten()
+	{
 		$profile = new Profile;
 		$data = $profile->profileAsisten();
 
 		return View::make('profile.asisten')->with('data', $data);
 	}
 
-	public function showDosen(){
+	public function showDosen()
+	{
 		$profile = new Profile;
 		$data = $profile->profileDosen();
 
 		return View::make('profile.dosen')->with('data', $data);
 	}
 
-	public function showPraktikan(){
+	public function showPraktikan()
+	{
 		$profile = new Profile;
 		$data = $profile->profilePraktikan();
 
 		return View::make('profile.praktikan')->with('data', $data);
 	}
 
-	public function viewPraktikan(){
+	public function viewPraktikan()
+	{
 
 	}
 
-	public function selectProfile(){
+	public function showLab()
+	{
+		$data = DB::table('tb_lab')->get();
+
+		return View::make('profile.listlab')->with('datas', $data);
+	}
+
+	public function selectProfile()
+	{
 		$profile = new Profile;
 
 		switch (Session::get('role_id')) {
@@ -79,7 +93,8 @@ class ProfileController extends HomeController{
 		}
 	}
 
-	public function editProfile(){
+	public function editProfile()
+	{
 		$input = Input::all();
 
 		$rules=array(
@@ -98,7 +113,7 @@ class ProfileController extends HomeController{
 
 		if($input['profilePic'] != null){
 			$pubpath = public_path();
-			$directory = $pubpath.'/uploads/user_profpic';
+			$directory = $pubpath.'uploads/user_profpic';
 			$filename = $database->praktikan_nim;
 			$upload_success = $input['profilePic']->move($directory,$filename.".jpeg");
 		}

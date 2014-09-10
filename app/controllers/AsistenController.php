@@ -17,12 +17,12 @@ class AsistenController extends BaseController {
 		return View::make('dashboard.asisten.asisten_index');
 	}
 
+	
 	public function showAbsensi()
 	{
 		$asisten = DB::table('view_user_asisten')
-						->join('tb_lab', 'view_user_asisten.lab_id', '=', 'tb_lab.lab_id')
 						->where('user_name', Session::get('user_name'))
-						->select('asisten_nim', 'lab_nama')->first();
+						->select('asisten_nim')->first();
 
 		$listPraktikum = DB::table('tb_detail_praktikum_asisten')
 							->join('tb_praktikum', 'tb_detail_praktikum_asisten.praktikum_id', '=', 'tb_praktikum.praktikum_id')
@@ -138,7 +138,6 @@ class AsistenController extends BaseController {
 		}
 
 		return View::make('absensi.listmodul')->with('listModul', $listModul);
-		
 	}
 
 	public function showDetailJadwal()

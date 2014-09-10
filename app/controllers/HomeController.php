@@ -104,7 +104,7 @@ class HomeController extends BaseController {
 		else if(Input::get('password') == Input::get('confirm_password')){
 			$file = Input::file('file')->getClientOriginalExtension();
 			$pubpath = public_path();
-			$directory = $pubpath.'/uploads/user_profpic';
+			$directory = $pubpath.'uploads/user_profpic';
 			$filename = Input::get('praktikan_nim');
 			$upload_success = Input::file('file')->move($directory,$filename.'.jpeg');
 			if($upload_success){
