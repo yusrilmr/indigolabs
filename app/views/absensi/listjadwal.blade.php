@@ -1,5 +1,5 @@
 @include('header')
-@include('menu')
+@include('dashboard/asisten/menu_asisten')
     <link href="js/advanced-datatable/css/demo_table.css" rel="stylesheet" />
 	<!--main content start-->
 	<section id="main-content">

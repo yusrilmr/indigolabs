@@ -46,8 +46,8 @@
 <!--logo start-->
 <div class="brand">
 
-    <a href="/" class="logo">
-        <img src="/images/logo.png" alt="">
+    <a href="index.html" class="logo">
+        <img src="{{ URL::asset('images/logo.png'); }}" alt="">
     </a>
     <div class="sidebar-toggle-box">
         <div class="fa fa-bars"></div>
@@ -186,7 +186,7 @@
                 <b class="caret"></b>
             </a>
             <ul class="dropdown-menu extended logout">
-                <li><a href="/profile"><i class=" fa fa-suitcase"></i>Profile</a></li>
+                <li><a href="#"><i class=" fa fa-suitcase"></i>Profile</a></li>
                 <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
                 <li><a href="/logout"><i class="fa fa-key"></i> Log Out</a></li>
             </ul>

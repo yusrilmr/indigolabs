@@ -25,7 +25,7 @@
             <div class="col-sm-12">
                 <section class="panel">
                     <header class="panel-heading">    
-						Data Praktikum
+						Data Pengambil Praktikum
                         <span class="tools pull-right">
                             <a href="javascript:;" class="fa fa-chevron-down"></a>
                             <a href="javascript:;" class="fa fa-cog"></a>
@@ -49,49 +49,34 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Modul</th>
-                                    <th>Shif</th>
-                                    <th>Mulai</th>
-                                    <th>Selesai</th>
-                                    <th>Durasi</th>
-									<th>Status</th>
+                                    <th>NIM</th>
+                                    <th>Nama</th>
+                                    <th>Nilai</th>
+                                    
+									
 									
                                     <th></th>
+                                    
                                     
                                 </tr>
                                 </thead>
                                 <tbody>
                                 
 								<?php $i=1 ?>
-								@foreach($data as $d)
+								@foreach($dataList as $d)
 									<tr class="">
 										<td><?php echo $i?></td>
 										<td>{{ $d->modul_nama }}</td>
-										<td>{{ $d->jadwal_nama }} | {{ $d->jadwal_hari}} {{ $d->jadwal_jam_mulai}}</td>																				
-										<td>{{ $d->running_start }}</td>
-										<td>{{ $d->running_end }}</td>
-										<td>{{ $d->running_duration }}</td>
+										<td>{{ $d->praktikan_nim }} </td>																				
+										<td>{{ $d->praktikan_nama }}</td>
 										<td><?php
-										
-										$dtNow = date("Y-m-d H:i:s",time());
-										if($dtNow > $d->running_start and $dtNow < $d->running_end){
-											echo "<span class=\"label label-success\">Sedang Berjalan</span>";
-										}else{
-											echo "<span class=\"label label-default\">Sudah Berakhir</span>";
-										}
+											$data = DB::table('view_dataListJawaban')->where('modul_id', $d->modul_id)->where('user_id', $d->user_id)->sum('jawaban_user_point');
+											echo $data;
 										?></td>
 										
+										
 										<td>
-										<?php
-											if($dtNow > $d->running_start and $dtNow < $d->running_end){
-												?>
-												{{ link_to_action('AdminController@praktikumPraDetail', 'Hentikan',array($d->running_id), ['class' => 'btn btn-danger btn-sm'])}}
-												<?php
-											}else{
-												?>
-												<a href="#" class="btn btn-danger btn-sm" disabled>Sudah Berakhir</a>												
-												<?php
-											}
-										?>
+											{{ link_to_action('AdminController@praktikumKoreksiDetail', 'Detail Nilai',array($d->modul_id, $d->user_id), ['class' => 'btn btn-warning btn-sm'])}}
 										</td>
 									</tr>
 									<?php $i++ ?>
@@ -111,41 +96,7 @@
     </section>
 </section>
 
-		<div class="modal fade" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Aktivasi Praktikum {{$praktikum->praktikum_nama}}</h4>
-                    </div>
-                    <div class="modal-body">
-						{{Form::open(array('action' => 'AdminController@storeRunning'))}}
-						Pilih Modul :
-						<select name="modul_id" class="form-control">
-							@foreach($modul as $m)
-								<option value="{{$m->modul_id}}">{{$m->modul_nama}}</option>							
-							@endforeach
-						</select>
-						<br/>
-						Pilih Shift :
-						<select name="jadwal_id" class="form-control">
-							@foreach($jadwal as $j)
-								<option value="{{$j->jadwal_id}}">{{$j->jadwal_nama}} | {{$j->jadwal_hari}} {{$j->jadwal_jam_mulai}}</option>
-							@endforeach
-						</select>
-						<br/>
-						Durasi (menit) : <input type="number" name="running_duration" step="5" min="0" max="120" value="0" class="form-control" placeholder="durasi (menit)"  /> <br/>
-                        {{ Form::hidden('praktikum_id', $praktikum->praktikum_id) }}
-                    </div>
-                    <div class="modal-footer">
-                        <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-                        {{Form::submit('Submit', array('class' => 'btn btn-primary')) }}
-                        <!-- <button class="btn btn-primary" type="button">Save changes</button> -->
-                        {{ Form::close() }}
-                    </div>
-                </div>
-            </div>
-        </div>
+		
 <!--main content end-->
 @include('footer')
 <!--script for this page only-->

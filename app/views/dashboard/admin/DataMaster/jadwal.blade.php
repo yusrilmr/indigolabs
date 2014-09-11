@@ -88,6 +88,7 @@
                                             <option value="5">5</option>
                                             <option value="6">6</option>
                                             <option value="7">7</option>
+                                            <option value="8">8</option>
                                         </select>
                                     </div>
                                     <div class="col-lg-4">
@@ -123,7 +124,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @for ($i = 0; $i < 7; $i++)
+                                @for ($i = 0; $i < 8; $i++)
                                 <tr>
                                     <td>{{ $i+1 }}</td>
                                     @for ($j = 0; $j < 6; $j++)
@@ -188,6 +189,7 @@
                                             <option value="5">5</option>
                                             <option value="6">6</option>
                                             <option value="7">7</option>
+                                            <option value="8">8</option>
                                         </select>
                                 {{ Form::hidden('update_jadwal_id', '', array('id'=>'update_jadwal_id')) }}
                             </div>

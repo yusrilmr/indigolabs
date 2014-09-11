@@ -85,9 +85,6 @@ Route::get('logout', array('uses' => 'HomeController@doLogout'));
 
 /* Profile */
 Route::get('/profile', 'ProfileController@selectProfile');
-Route::get('/profile/lab', 'ProfileController@showLab');
-Route::post('profile/editPass', 'ProfileController@editPassword');
-Route::post('profile/editProfile', 'ProfileController@editProfile');
 
 /*Role Route Pages*/
 @include "admin.php";

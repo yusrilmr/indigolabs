@@ -14,10 +14,11 @@
                     <span>Data Master</span>
                 </a>
                 <ul class="sub">
-                  
+                    <li><a href="praktikan.php">Praktikan</a></li>
+                    <li><a href="asisten.php">Asisten</a></li>
                     <li><a href="/admin/datamasterdosen">Dosen</a></li>
-                    
-                    <li><a href="/admin/datamaster/lab">Laboraturium</a></li>
+                    <li><a href="praktikum.php">Praktikum</a></li>
+                    <li><a href="{{ action('AdminController@lab'); }}">Laboraturium</a></li>
                 </ul>
             </li>
             <li class="sub-menu">
@@ -26,8 +27,10 @@
                     <span>Sistem Praktikum</span>
                 </a>
                 <ul class="sub">
-                    <li><a href="/praktikum/pra">Aktivasi Praktikum</a></li> 
-					
+                    <li><a href="{{ action('AdminController@praktikumPra'); }}">Aktivasi Praktikum</a></li> 
+					<li><a href="praktikum.create.php">Buat Modul</a></li>
+                    <li><a href="praktikum.koreksi.php">Koreksi Praktikum</a></li>
+                    <li><a href="praktikum.laporan.php">Laporan Nilai</a></li>
                     <li><a href="{{ action('AdminController@jadwal'); }}">Jadwal</a></li>
                     <li><a href="{{ action('AdminController@ruang'); }}">Ruang</a></li>					
                 </ul>

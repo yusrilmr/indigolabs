@@ -284,7 +284,7 @@ setInterval(function () {
     minutes = parseInt(seconds_left / 60);
     seconds = parseInt(seconds_left % 60);
     if(seconds < 1 && minutes < 1 && hours < 1  ){
-		//alert ("Waktu Anda habis, semua data anda telah tersimpan, terimakasih !");
+		alert ("Waktu Anda habis, semua data anda telah tersimpan, terimakasih !");
 		//form submit sini yawid="formData"		
 		$("#formData2").submit();
 		console.log($('#formData2').html());

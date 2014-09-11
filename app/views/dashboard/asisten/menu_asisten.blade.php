@@ -29,6 +29,7 @@
                     <li><a href="praktikum.create.php">Buat Modul</a></li>
                     <li><a href="praktikum.koreksi.php">Koreksi Praktikum</a></li>
                     <li><a href="praktikum.laporan.php">Laporan Nilai</a></li>
+                    <li><a href="{{ action('AsistenController@showAbsensi'); }}">Absensi</a></li>
                 </ul>
             </li>
             

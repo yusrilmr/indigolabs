@@ -512,7 +512,7 @@ class AdminController extends BaseController {
 			$jawaban			->save();	
 		}
 		
-		return Redirect::to('lab/'.$lab_id.'/praktikum/'.$praktikum_id.'/modul/'.$modul_id.'/listsoal/'.$soal_id);
+		return Redirect::to('lab/'.$lab_id.'/praktikum/'.$praktikum_id.'/modul/'.$modul_id.'/listsoal/'.$soals->soal_id);
 	}
 	
 	
@@ -539,24 +539,134 @@ class AdminController extends BaseController {
 		
 		return View::make('dashboard.admin.Praktikum.praktikumPraPlayDetail')->with('modul',$modul)->with('jadwal', $jadwal)->with('jumlah', $jumlah)->with('praktikum',$praktikum)->with('data',$data);
 	}
+	
+	public function cekUser(){
+		$user_name 		= Session::get('user_name');
+		$user			= DB::table('tb_user')->where('user_name','=', $user_name)->select('user_id')->first();
+		return $user->user_id;
+	}
+	
 	public function storeRunning(){		
 		$durasi = Input::get('running_duration');			
 		
 		$dtStart = date("Y-m-d H:i:s",time() );
 		$dtEnd = date("Y-m-d H:i:s",time() + (($durasi*60)));
 		
+		/*
+		
+			*
+		FROM
+			tb_modul
+		INNER JOIN tb_quiz USING (modul_id)
+		WHERE
+			tb_modul.modul_id = 8
+		ORDER BY
+			tb_quiz.quiz_urutan ASC
+
+		*/
+		$dS = date("Y-m-d H:i:s",time() );
+		
+		$ambilQuiz		=DB::table('tb_modul')
+						->join('tb_quiz','tb_modul.modul_id','=','tb_quiz.modul_id')
+						->where('tb_modul.modul_id','=',Input::get('modul_id'))
+						->select('tb_quiz.quiz_id', 'tb_quiz.quiz_durasi')
+						->get();
+		/*
+		SELECT
+			*
+		FROM
+			tb_user
+		INNER JOIN tb_praktikan USING (user_id)
+		INNER JOIN tb_detail_jadwal_praktikan USING (praktikan_nim)
+		INNER JOIN tb_jadwal using(jadwal_id)
+		where tb_jadwal.jadwal_id = 1
+		*/
+		
+		$ambilUser		=DB::table('tb_user')
+						->join('tb_praktikan','tb_praktikan.user_id','=','tb_user.user_id')
+						->join('tb_detail_jadwal_praktikan','tb_detail_jadwal_praktikan.praktikan_nim','=','tb_praktikan.praktikan_nim')
+						->join('tb_jadwal','tb_jadwal.jadwal_id','=','tb_detail_jadwal_praktikan.jadwal_id')
+						->get();
+						
+						
 		$run			= new Running;
 		$run			->running_start = $dtStart;
 		$run			->running_end = $dtEnd;
 		$run			->running_duration = Input::get('running_duration');
 		$run			->jadwal_id = Input::get('jadwal_id'); 
-		$run			->modul_id = Input::get('modul_id'); 
-		$user_name 		= Session::get('user_name');
-		$user			=DB::table('tb_user')->where('user_name','=', $user_name)->first();
-		$run			->user_id = $user->user_id;
+		$run			->modul_id = Input::get('modul_id'); 		
+		$run			->user_id = $this->cekUser();
 		$run			->save();
+		
+		
+		$ambilIdLastRunning = DB::table('tb_running')->orderBy('running_id','desc')->select('running_id')->first();
+		$dS = date("Y-m-d H:i:s");				
+		foreach($ambilUser as $au){
+			foreach($ambilQuiz as $aq){				
+			
+				$dE = date($dS,time() + (($aq->quiz_durasi*60)));				
+				$kunci_quiz = new KunciQuiz;
+				$kunci_quiz -> user_id = $this->cekUser();
+				$kunci_quiz -> quiz_id = $aq->quiz_id;
+				$kunci_quiz -> kunci_quiz_start = $dS;
+				$kunci_quiz -> kunci_quiz_end = $dE;
+				$kunci_quiz -> kunci_quiz_status = 0;
+				$kunci_quiz -> user_id = $au->user_id;
+				$kunci_quiz -> running_id = $ambilIdLastRunning->running_id;
+				$kunci_quiz -> save();
+				
+				$dS = $dE;
+			}
+		}
+						
+		
+		
+		
 		$praktikum = Input::get('praktikum_id');
 		return Redirect::to('praktikum/pra/'.$praktikum);
+	}
+	
+	public function stopRunning($praktikum, $running_id){
+		$dtNow = date("Y-m-d H:i:s",time());
+		$updateRunning = DB::table('tb_running')
+            ->where('running_id', $running_id )
+            ->update(array('running_end' => $dtNow));
+		return Redirect::to('praktikum/pra/'.$praktikum);
+	}
+	
+	public function praktikumKoreksiList( $running_id){
+		$dataRunning = DB::table('tb_running')
+				->where('running_id', $running_id )
+				->select('running_id','modul_id')
+				->first();
+		$dataList = DB::table('view_dataListJawaban')
+		->where('modul_id', $dataRunning->modul_id)
+		->groupBy('user_id')->select('modul_nama','user_id','praktikan_nama','praktikan_nim', 'jawaban_user_point','modul_id')->get();		
+		return View::make('dashboard.admin.Praktikum.praktikumKoreksiList')->with('dataList',$dataList);
+	}
+	
+	public function praktikumKoreksiDetail( $modul_id, $user_id){
+		$ambilQuiz = DB::table('tb_quiz')->where('modul_id',$modul_id)->get();
+		
+		$dataList = DB::table('view_dataListJawaban')
+		->where('modul_id', $modul_id)
+		->where('user_id', $user_id)
+		->select('quiz_id','soal_id','soal_type','soal_point','modul_nama','user_id','praktikan_nama','praktikan_nim', 'soal_text', 'jawaban_user_point','jawaban_user_text','modul_id')->get();		
+		
+		return View::make('dashboard.admin.Praktikum.praktikumKoreksiDetail')->with('dataList',$dataList)->with('ambilQuiz',$ambilQuiz);
+	}
+	
+	public function updateNilai(){
+		
+		$this->updateJawab(Input::get('soal_id'), Input::get('user_id'), Input::get('point'));
+		return Redirect::to(Input::get('link'));		
+	}
+	
+	public function updateJawab($soal_id, $user_id, $point){
+		DB::table('tb_jawaban_user')	
+		->where('soal_id','=',$soal_id)
+		->where('user_id','=',$user_id)
+		->update(array('jawaban_user_point' => $point));
 	}
 	
 

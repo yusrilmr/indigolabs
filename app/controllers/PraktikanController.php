@@ -22,7 +22,7 @@ class PraktikanController extends BaseController {
 	public function showWelcome()
 	{
 		
-		$data = DB::table('view_datajadwal')->get();
+		$data = DB::table('view_dataJadwal')->get();
 			
 		$user_name 		= Session::get('user_name');
 		$user			= DB::table('tb_user')->where('user_name','=', $user_name)->first();
@@ -39,7 +39,7 @@ class PraktikanController extends BaseController {
 		
 		//return View::make('dashboard.praktikan.praktikum.praktikumEnd');
 	}
-
+	
 	public function praktikumList($running_id)
 	{	
 		$run = DB::table('tb_running')
@@ -154,8 +154,8 @@ class PraktikanController extends BaseController {
 	public function updateJawaban3(){
 		$file = Input::file('berkas');
 		$input=Input::all();
-
 		$rules=array(
+
 			'berkas' => 'mimes:zip|max:10000',
 			);
 

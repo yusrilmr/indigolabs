@@ -11,7 +11,7 @@
                     <header class="panel-heading">
                         <ul class="breadcrumb">
                             <li>
-                                <a href="/admin/datamaster/lab"><i class="fa fa-home"></i> Laboratorium</a>
+                                <a href="{{ action('AdminController@lab'); }}"><i class="fa fa-home"></i> Laboratorium</a>
                             </li>
                             <li class="active">
                                 {{$labs->lab_nama}}

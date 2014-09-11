@@ -22,7 +22,7 @@
 			
 		
 			foreach($cek as $c){
-			if($r->quiz_id == $c->quiz_id and $c->user_id == $user->user_id and $c->running_id == $r->running_id ){
+			if($r->quiz_id == $c->quiz_id and $c->user_id == $user->user_id and $c->running_id == $r->running_id  ){
 			$dtEnd = $c->kunci_quiz_end;
 			$dtStart = $c->kunci_quiz_start;			
 			
