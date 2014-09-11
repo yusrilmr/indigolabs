@@ -188,7 +188,6 @@
                                             <option value="5">5</option>
                                             <option value="6">6</option>
                                             <option value="7">7</option>
-                                            <option value="8">8</option>
                                         </select>
                                 {{ Form::hidden('update_jadwal_id', '', array('id'=>'update_jadwal_id')) }}
                             </div>
