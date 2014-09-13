@@ -88,7 +88,6 @@
                                             <option value="5">5</option>
                                             <option value="6">6</option>
                                             <option value="7">7</option>
-                                            <option value="8">8</option>
                                         </select>
                                     </div>
                                     <div class="col-lg-4">
@@ -124,22 +123,26 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @for ($i = 0; $i < 8; $i++)
+                                @for ($i = 0; $i < 7; $i++)
                                 <tr>
                                     <td>{{ $i+1 }}</td>
                                     @for ($j = 0; $j < 6; $j++)
                                     <td style="min-width:140px;max-width:140px;">
-                                        <?php $jadwal_data =  DB::table('tb_jadwal')->where('jadwal_shift', $i+1)->where('jadwal_hari', $j+1)->where('jadwal_status', 1)->where('ruangan_id', $ruang->ruang_id )->first();
+                                        <?php $jadwal_datax =  DB::table('tb_jadwal')->where('jadwal_shift', $i+1)->where('jadwal_hari', $j+1)->where('jadwal_status', 1)->where('ruangan_id', $ruang->ruang_id )->get();
                                          ?>
-                                        @if (count($jadwal_data) > 0)
+                                        
+										@foreach($jadwal_datax as $jadwal_data)
+										@if (count($jadwal_data) > 0)
                                         <button onclick="getUpdate('{{$jadwal_data->jadwal_id}}', '{{$jadwal_data->ruangan_id}}', '{{$jadwal_data->jadwal_hari}}', '{{$jadwal_data->jadwal_shift}}')" type="button" data-toggle="modal" href="#myModal-2" class="btn btn-primary center-block" >
                                         {{$jadwal_data->jadwal_nama}}
+										
                                         </button>
 
                                         {{ link_to_action('AdminController@deleteJadwal', 'Delete', array($jadwal_data->jadwal_id), ['class' => 'btn btn-danger center-block', 'onclick' => 'return confirm(\'Are you sure you want to delete this item?\');' ])}}
 
 
                                         @endif
+										@endforeach
                                     </td>
                                     @endfor
                                 </tr>
@@ -189,7 +192,6 @@
                                             <option value="5">5</option>
                                             <option value="6">6</option>
                                             <option value="7">7</option>
-                                            <option value="8">8</option>
                                         </select>
                                 {{ Form::hidden('update_jadwal_id', '', array('id'=>'update_jadwal_id')) }}
                             </div>

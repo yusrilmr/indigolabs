@@ -5,7 +5,7 @@
 <div class="search-row">
     <h3>Jadwal Praktikum</h3>
 </div>
-<div class="right-stat-bar">
+<div class="right-stat-bar" style="display: none;">
 <ul class="right-side-accordion">
 
 <li class="widget-collapsible">

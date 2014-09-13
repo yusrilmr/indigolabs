@@ -92,72 +92,87 @@ class HomeController extends BaseController {
 			'praktikan_telp'=>'required|numeric',
 			'praktikan_email'=>'required|email',
 			'username'=>'required|min:1',
-			'password'=>'required|min:1|alpha_num',
-			'files'=>'image|max:1000'
+			'password'=>'required|min:1|alpha_num'
 			);
 		$validation = Validator::make($input,$rules);
 		if($validation->fails())
 		{
-			return Redirect::to('register')->withErrors($validation);
-			
+			return Redirect::to('register')->withErrors($validation)->withInput();;
 		}
 		else if(Input::get('password') == Input::get('confirm_password')){
-			$file = Input::file('file')->getClientOriginalExtension();
-			$pubpath = public_path();
-			$directory = $pubpath.'/uploads/user_profpic';
-			$filename = Input::get('praktikan_nim');
-			$upload_success = Input::file('file')->move($directory,$filename.'.jpeg');
-			if($upload_success){
+			if(Input::hasFile('file')){
+				$files = array('files' => Input::file('file'));
+				$rules = array('files'=>'max:1000');
 
-				$user = new Tb_User;
-				$praktikan =  new Tb_Praktikan;
-				$tb_detail_praktikan_kelas =new Tb_Detail_Praktikan_Kelas;
-				
-				$user->user_name = Input::get('username');
-				$user->password  = Hash::make(Input::get('password'));
-				$user->role_id  = '4';
-				
+				$ext = Input::file('file')->getClientOriginalExtension();
 
-				$praktikan->praktikan_nim  =Input::get('praktikan_nim');
-				$praktikan->praktikan_nama =Input::get('praktikan_nama');
-				$praktikan->praktikan_email =Input::get('praktikan_email');
-				$praktikan->praktikan_telp =Input::get('praktikan_telp');
-				$praktikan->praktikan_foto =$filename;
+				$validation = Validator::make($files, $rules);
 
-				$tb_detail_praktikan_kelas->praktikan_nim  = Input::get('praktikan_nim');
-				$tb_detail_praktikan_kelas->kelas_id  =Input::get('kelas_nama');
+				if($validation->fails())
+				{
+					return Redirect::to('register')->withErrors($validation)
+						->withInput();
+				}
 
-				$checkNim=DB::table('tb_praktikan')
-							->where('praktikan_nim','=',Input::get('praktikan_nim'))
-							->pluck('praktikan_nim');
+				$listExt = array('jpg', 'png', 'jpeg', 'gif', 'bmp');
 
-				$checkUser=DB::table('tb_user')
-							->where('user_name',Input::get('user_name'))
-							->pluck('user_name');
+				if(!in_array(strtolower($ext), $listExt)){
+					return Redirect::to('register')->with('pesan_error', 'Format file salah')
+						->withInput();;
+				}
 
-				if($checkNim == null && $checkUser == null){
+				$pubpath = public_path();
+				$directory = $pubpath.'/uploads/user_profpic';
+				$filename = Input::get('praktikan_nim').".jpeg";
+				Input::file('file')->move($directory, $filename);
+			}
+
+			$user = new Tb_User;
+			$praktikan =  new Tb_Praktikan;
+			$tb_detail_praktikan_kelas =new Tb_Detail_Praktikan_Kelas;
+					
+			$user->user_name = Input::get('username');
+			$user->password  = Hash::make(Input::get('password'));
+			$user->role_id  = '4';
+					
+
+			$praktikan->praktikan_nim  =Input::get('praktikan_nim');
+			$praktikan->praktikan_nama =Input::get('praktikan_nama');
+			$praktikan->praktikan_email =Input::get('praktikan_email');
+			$praktikan->praktikan_telp =Input::get('praktikan_telp');
+			$praktikan->praktikan_foto = Input::get('praktikan_nim');
+
+			$tb_detail_praktikan_kelas->praktikan_nim  = Input::get('praktikan_nim');
+			$tb_detail_praktikan_kelas->kelas_id  =Input::get('kelas_nama');
+
+			$checkNim=DB::table('tb_praktikan')
+						->where('praktikan_nim','=',Input::get('praktikan_nim'))
+						->pluck('praktikan_nim');
+			$checkUser=DB::table('tb_user')
+						->where('user_name',Input::get('username'))
+						->pluck('user_name');
+
+			
+			if($checkNim == null && $checkUser == null){
 				$user->save();
 
 				$user = DB::table('tb_user')->where('user_name',Input::get('username'))->pluck('user_id');
-	
+		
 				$praktikan->user_id=$user;
 				$praktikan->save();
-				
-				
+								
 				$tb_detail_praktikan_kelas->save();
-				
-					return Redirect::to('login');
-				}else{
-					return Redirect::to('register')->with('pesan_error', 'Username atau NIM sudah terdaftar ! ')
-			        ->withInput();
-					}
-				}
+					
+				return Redirect::to('login')->with('success', 'Selamat, Anda telah terdaftar');
 			}else{
-			return Redirect::to('register')->withErrors($validation);
+				return Redirect::to('register')->with('pesan_error', 'Username atau NIM sudah terdaftar ! ')
+			        ->withInput();
+			}
+			
+		}else{
+			return Redirect::to('register')->with('pesan_error', 'Password tidak sama! ')
+			        ->withInput();
 		}
-
-		
-
 	}
 
 	

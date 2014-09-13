@@ -1,5 +1,5 @@
 @include('header')
-@include('menu')
+@include('dashboard/admin/menu_admin')
 <!--main content start-->
     <section id="main-content">
         <section class="wrapper">
@@ -88,7 +88,7 @@
 																	<input type="hidden" name="link" value="<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">
 																	Jawaban :
 																	<?php if($dl->soal_type==3){ ?>																		
-																		<a href="{{asset('upload_jawab/'.$dl->jawaban_user_text )}}">Download Jawaban</a> 
+																		<a href="{{asset('upload_jawabloch/'.$dl->jawaban_user_text )}}">Download Jawaban</a> 
 																	<?php }
 																	?>
 																	
@@ -99,7 +99,9 @@
 															</div>
 														</div>
 													<?php
+													$xx++;
 														}
+														
 													?>																								
 												@endforeach
 												</div>

@@ -21,11 +21,12 @@ class PraktikanController extends BaseController {
 	
 	public function showWelcome()
 	{
-		
-		$data = DB::table('view_dataJadwal')->get();
-			
 		$user_name 		= Session::get('user_name');
 		$user			= DB::table('tb_user')->where('user_name','=', $user_name)->first();
+		
+		$data = DB::table('view_datajadwal')->where('user_id','=',$this->cekUser())->get();
+			
+		
 		
 		$jadwal = DB::table('tb_user')
 			->join('tb_praktikan', 'tb_user.user_id', '=', 'tb_praktikan.user_id')
@@ -34,6 +35,7 @@ class PraktikanController extends BaseController {
 			->join('tb_praktikum', 'tb_praktikum.praktikum_id', '=', 'tb_jadwal.praktikum_id')
 			->select('tb_praktikum.praktikum_id', 'tb_praktikum.praktikum_nama','tb_jadwal.jadwal_jam_mulai','tb_jadwal.jadwal_hari', 'tb_jadwal.jadwal_jam_selesai')
 			->where('tb_user.user_id','=',$this->cekUser())
+			
 			->get();
 		return View::make('dashboard.praktikan.praktikan_index')->with('data', $data)->with('jadwal', $jadwal);
 		
@@ -61,7 +63,7 @@ class PraktikanController extends BaseController {
 	public function praktikumSoal($running_id, $quiz_id, $nomor)
 	{			
 	
-		$soal = DB::table('view_dataSoal')->where('running_id','=', $running_id)->where('quiz_id','=', $quiz_id)->get();
+		$soal = DB::table('view_datasoal')->where('running_id','=', $running_id)->where('quiz_id','=', $quiz_id)->get();
 		$jawaban = DB::table('tb_jawaban')->join('tb_soal','tb_soal.soal_id','=','tb_jawaban.soal_id')->where('quiz_id', '=', $quiz_id)->select('tb_jawaban.jawaban_id','tb_jawaban.jawaban_text','tb_soal.soal_id')->get();
 		$run = $running_id;
 		$quiz = $quiz_id;
@@ -78,13 +80,9 @@ class PraktikanController extends BaseController {
 		->select('quiz_durasi')
 		->first();
 		
+						
 		
 		
-		
-		//var_dump($cekData);
-		
-		
-				
 		if($cekData == null){		
 			foreach($soal as $so){		
 			 $this->inputJawabStart($so->soal_id, $this->cekUser());
@@ -117,8 +115,7 @@ class PraktikanController extends BaseController {
 				->where('user_id','=',$this->cekUser())
 				->select('jawaban_id','jawaban_user_text','soal_id')->first();
 				
-		return View::make('dashboard.praktikan.praktikum.praktikumStart')->with('soal',$soal)->with('jawaban',$jawaban)->with('run',$run)->with('quiz',$quiz)->with('no',$no)->with('getJawaban',$getJawaban)->with('getTimer', $getTimer);
-		
+		return View::make('dashboard.praktikan.praktikum.praktikumStart')->with('soal',$soal)->with('jawaban',$jawaban)->with('run',$run)->with('quiz',$quiz)->with('no',$no)->with('getJawaban',$getJawaban)->with('getTimer', $getTimer);		
 	}
 	//input PILGAN
 	public function updateJawaban1(){
@@ -156,23 +153,23 @@ class PraktikanController extends BaseController {
 		$input=Input::all();
 		$rules=array(
 
-			'berkas' => 'mimes:zip|max:10000',
+			'berkas' => 'mimes:zip|max:10000'
 			);
 
 		$validation = Validator::make($input,$rules);
 		if($validation->fails())
 		{
 			//Upload Gagal
-			return Redirect::to('upload')->withErrors($validation);
+			return Redirect::to(Input::get('link'))->withErrors($validation);
 			
 		}
 
 		$pubpath = public_path();
-		$directory = $pubpath.'\upload_jawab';
+		$directory = $pubpath.'\upload_jawabloch';
 
 		$filename = $file->getClientOriginalName();
 		//$filenamefix = $item_id.$filename;
-		$filenamefix = md5($filename."jawaban")."zip";
+		$filenamefix = md5($filename."jawaban").".zip";
 
 		$fileSize = $file->getSize();
 		$fileExt = $file->getClientOriginalExtension();
@@ -181,7 +178,7 @@ class PraktikanController extends BaseController {
 
 		if($upload_status){
 				//Upload Berhasil
-				return View::make('dashboard.admin.DataMaster.result')->with('item_ids', $item_id);
+				//return View::make('dashboard.admin.DataMaster.result')->with('item_ids', $item_id);
 				
 				$this->updateJawab(Input::get('soal_id'), $this->cekUser(), $filenamefix, 0, 0);				
 				return Redirect::to(Input::get('link'));

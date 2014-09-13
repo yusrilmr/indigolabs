@@ -47,6 +47,11 @@ Route::get('praktikum/pra', 'AdminController@praktikumPra');
 Route::get('praktikum/pra/{praktikum_id}', 'AdminController@praktikumPraDetail');
 Route::post('praktikum/pra/insert', 'AdminController@storeRunning');
 
+Route::get('praktikum/stop/{praktikum}/{running_id}', 'AdminController@stopRunning');
+Route::get('praktikum/koreksi/{running_id}', 'AdminController@praktikumKoreksiList');
+Route::get('praktikum/koreksi/{modul_id}/{user_id}', 'AdminController@praktikumKoreksiDetail');
+Route::post('nilai/updateNilai', 'AdminController@updateNilai');
+
 
 /*All About Ruangan*/
 Route::get('admin/ruang', 'AdminController@ruang');

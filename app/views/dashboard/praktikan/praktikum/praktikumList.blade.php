@@ -1,5 +1,5 @@
 @include('header')
-@include('menu')
+@include('dashboard/praktikan/menu_praktikan')
 <!--main content start-->
     <section id="main-content">
         <section class="wrapper">

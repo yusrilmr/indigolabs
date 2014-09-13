@@ -1,5 +1,5 @@
 @include('header')
-@include('menu')
+@include('dashboard/admin/menu_admin')
 
 <!--main content start-->
     <section id="main-content">
@@ -47,9 +47,7 @@
                                     
                                 </div>
                                 <div class="btn-group pull-right" data-toggle="modal" href="#modalPlay">
-                                    <button class="btn btn-primary">
-                                            Aktifkan Praktikum <i class="fa fa-play"></i>
-                                        </button>
+                                    
                                 </div>
                             </div>
                             <div class="space15"></div>
@@ -109,14 +107,15 @@
 						
 						
                         {{Form::text('quiz_nama', '', array('class' => 'form-control', 'placeholder' => 'Nama Soal' , 'required' ))}}<br/>
+                        
 						{{Form::text('quiz_keterangan', '', array('class' => 'form-control', 'placeholder' => 'Keterangan', 'required' ))}} <br/>
-						Durasi (menit) : <input type="number" name="quiz_durasi" step="5" min="0" max="120" value="0" class="form-control" placeholder="durasi (menit)"  /> <br/>
-						{{Form::textarea('quiz_intro', '', array('class' => 'form-control', 'placeholder' => 'Introduction', 'required' ))}}
-						
+						Durasi (menit) : <input type="number" name="quiz_durasi" step="5" min="0" max="999999999999999999" value="0" class="form-control" placeholder="durasi (menit)"  /> <br/>
+						{{Form::textarea('quiz_intro', '', array('class' => 'form-control', 'placeholder' => 'Introduction', 'required' ))}}<br/>
+						Urutan : {{Form::text('quiz_urutan', '1', array('class' => 'form-control', 'placeholder' => 'Urutan' , 'required' ))}}<br/>
+						Bobot (%) : <input type="number" name="quiz_bobot" step="5" min="0" max="120" value="0" class="form-control" placeholder="bobot"  /> <br/>
                         <br>
                         {{ Form::hidden('praktikum_id', $praktikum->praktikum_id) }}
                         {{ Form::hidden('lab_id', $labs->lab_id) }}
-
                     </div>
                     <div class="modal-footer">
                         <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>

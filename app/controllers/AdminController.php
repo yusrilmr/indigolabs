@@ -435,6 +435,7 @@ class AdminController extends BaseController {
 		$quiz			->quiz_intro = Input::get('quiz_intro');
 		$quiz			->modul_id = Input::get('modul_id');	
 		$quiz			->quiz_durasi = Input::get('quiz_durasi');
+		$quiz			->quiz_bobot = Input::get('quiz_bobot');
 		$quiz			->save();		
 		return Redirect::to('lab/'.$lab_id.'/praktikum/'.$praktikum_id.'/modul/'.$modul_id.'/listsoal');
 	}
@@ -459,11 +460,14 @@ class AdminController extends BaseController {
 		$lab_id			= Input::get('lab_id');
 		$praktikum_id	= Input::get('praktikum_id');
 		$modul_id		= Input::get('modul_id');
+		$quiz_id		= Input::get('quiz_id');
+		
 		$soal 			= new Soal;
 		$soal			->soal_text = Input::get('soal_text');
 		$soal			->soal_point = Input::get('soal_point');
 		$soal			->soal_type = Input::get('soal_type');		
 		$soal			->quiz_id = Input::get('quiz_id');	
+		
 		$soal			->save();		
 		
 		
@@ -475,31 +479,31 @@ class AdminController extends BaseController {
 							
 			$jawaban			= new Jawaban;
 			$jawaban			->jawaban_text = Input::get('pilihanA');
-			$jawaban			->jawaban_benar = Input::get('kunciSoalA');
+			$jawaban			->jawaban_benar = Input::get('kunci');
 			$jawaban			->soal_id = $soals->soal_id;
 			$jawaban			->save();
 			
 			$jawaban			= new Jawaban;
 			$jawaban			->jawaban_text = Input::get('pilihanB');
-			$jawaban			->jawaban_benar = Input::get('kunciSoalB');
+			$jawaban			->jawaban_benar = Input::get('kunci');
 			$jawaban			->soal_id = $soals->soal_id;
 			$jawaban			->save();
 			
 			$jawaban			= new Jawaban;
 			$jawaban			->jawaban_text = Input::get('pilihanC');
-			$jawaban			->jawaban_benar = Input::get('kunciSoalC');
+			$jawaban			->jawaban_benar = Input::get('kunci');
 			$jawaban			->soal_id = $soals->soal_id;
 			$jawaban			->save();
 			
 			$jawaban			= new Jawaban;
 			$jawaban			->jawaban_text = Input::get('pilihanD');
-			$jawaban			->jawaban_benar = Input::get('kunciSoalD');
+			$jawaban			->jawaban_benar = Input::get('kunci');
 			$jawaban			->soal_id = $soals->soal_id;
 			$jawaban			->save();
 			
 			$jawaban			= new Jawaban;
 			$jawaban			->jawaban_text = Input::get('pilihanE');
-			$jawaban			->jawaban_benar = Input::get('kunciSoalE');
+			$jawaban			->jawaban_benar = Input::get('kunci');
 			$jawaban			->soal_id = $soals->soal_id;
 			$jawaban			->save();
 			
@@ -512,7 +516,7 @@ class AdminController extends BaseController {
 			$jawaban			->save();	
 		}
 		
-		return Redirect::to('lab/'.$lab_id.'/praktikum/'.$praktikum_id.'/modul/'.$modul_id.'/listsoal/'.$soals->soal_id);
+		return Redirect::to('lab/'.$lab_id.'/praktikum/'.$praktikum_id.'/modul/'.$modul_id.'/listsoal/'.$quiz_id);
 	}
 	
 	
@@ -531,7 +535,7 @@ class AdminController extends BaseController {
 	}
 	public function praktikumPraDetail($praktikum_id){		
 		$modul		= DB::table('tb_modul')->where('praktikum_id', $praktikum_id)->select('tb_modul.modul_id','tb_modul.modul_nama')->get();
-		$jadwal 	= DB::table('tb_jadwal')->join('tb_ruang','tb_jadwal.ruangan_id','=','tb_ruang.ruang_id')->where('praktikum_id', $praktikum_id)->select('tb_jadwal.jadwal_id', 'tb_jadwal.jadwal_nama', 'tb_jadwal.jadwal_jam_mulai','tb_jadwal.jadwal_jam_selesai','tb_jadwal.jadwal_hari','tb_ruang.ruang_nama')->get();
+		$jadwal 	= DB::table('tb_jadwal')->join('tb_ruang','tb_jadwal.ruangan_id','=','tb_ruang.ruang_id')->where('praktikum_id', $praktikum_id)->where('jadwal_status', 1)->select('tb_jadwal.jadwal_id', 'tb_jadwal.jadwal_nama', 'tb_jadwal.jadwal_jam_mulai','tb_jadwal.jadwal_jam_selesai','tb_jadwal.jadwal_hari','tb_ruang.ruang_nama')->get();
 		$jumlah		= DB::table('tb_jadwal')->join('tb_detail_jadwal_praktikan','tb_jadwal.jadwal_id','=','tb_detail_jadwal_praktikan.jadwal_id')->count();
 		$praktikum	= Praktikum::find($praktikum_id);
 		
@@ -600,11 +604,20 @@ class AdminController extends BaseController {
 		
 		
 		$ambilIdLastRunning = DB::table('tb_running')->orderBy('running_id','desc')->select('running_id')->first();
-		$dS = date("Y-m-d H:i:s");				
+		/*
+		1,2,3
+		
+		1,2,3,4
+		*/
 		foreach($ambilUser as $au){
+			$dS = date("Y-m-d H:i:s");
 			foreach($ambilQuiz as $aq){				
 			
-				$dE = date($dS,time() + (($aq->quiz_durasi*60)));				
+				//$dE = date($dS,time() + (($aq->quiz_durasi*60)));				
+				
+				$dE = date("Y-m-d H:i:s", strtotime("+$aq->quiz_durasi minutes"));				
+				echo  $aq->quiz_durasi;
+				echo $dS." |||| ".$dE."<br/>";
 				$kunci_quiz = new KunciQuiz;
 				$kunci_quiz -> user_id = $this->cekUser();
 				$kunci_quiz -> quiz_id = $aq->quiz_id;
@@ -619,9 +632,6 @@ class AdminController extends BaseController {
 			}
 		}
 						
-		
-		
-		
 		$praktikum = Input::get('praktikum_id');
 		return Redirect::to('praktikum/pra/'.$praktikum);
 	}
@@ -668,11 +678,6 @@ class AdminController extends BaseController {
 		->where('user_id','=',$user_id)
 		->update(array('jawaban_user_point' => $point));
 	}
-	
-
-
-
-
 
 	/*Manage Ruangan*/
 	public function ruang(){
@@ -929,8 +934,9 @@ class AdminController extends BaseController {
 		$upload_status = Input::file('berkas')->move($directory,$filenamefix);
 
 		if($upload_status){
-
-				$user_id = 12;
+				$user_name 		= Session::get('user_name');
+				$user			= DB::table('tb_user')->where('user_name','=', $user_name)->select('user_id')->first();				
+				$user_id 		= $user->user_id;
 
 				//$item_kode = md5($filename.$item_id);
 

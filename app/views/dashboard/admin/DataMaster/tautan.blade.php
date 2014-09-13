@@ -1,5 +1,5 @@
 @include('header')
-@include('menu')
+@include('dashboard/admin/menu_admin')
 <section id="main-content">
         <section class="wrapper">
 		<div class="form-group">

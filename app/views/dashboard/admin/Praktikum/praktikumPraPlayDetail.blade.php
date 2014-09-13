@@ -1,5 +1,5 @@
 @include('header')
-@include('menu')
+@include('dashboard/admin/menu_admin')
 <!--main content start-->
     <section id="main-content">
         <section class="wrapper">
@@ -56,6 +56,7 @@
 									<th>Status</th>
 									
                                     <th></th>
+                                    <th></th>
                                     
                                 </tr>
                                 </thead>
@@ -84,7 +85,7 @@
 										<?php
 											if($dtNow > $d->running_start and $dtNow < $d->running_end){
 												?>
-												{{ link_to_action('AdminController@praktikumPraDetail', 'Hentikan',array($d->running_id), ['class' => 'btn btn-danger btn-sm'])}}
+												{{ link_to_action('AdminController@stopRunning', 'Hentikan',array($praktikum->praktikum_id, $d->running_id), ['class' => 'btn btn-danger btn-sm'])}}
 												<?php
 											}else{
 												?>
@@ -92,6 +93,9 @@
 												<?php
 											}
 										?>
+										</td>
+										<td>
+											{{ link_to_action('AdminController@praktikumKoreksiList', 'Nilai',array($d->running_id), ['class' => 'btn btn-warning btn-sm'])}}
 										</td>
 									</tr>
 									<?php $i++ ?>
@@ -129,12 +133,15 @@
 						<br/>
 						Pilih Shift :
 						<select name="jadwal_id" class="form-control">
+						<?php
+							$hari = array('minggu','senin','selasa','rabu','kamis','jumat','sabtu');							
+						?>
 							@foreach($jadwal as $j)
-								<option value="{{$j->jadwal_id}}">{{$j->jadwal_nama}} | {{$j->jadwal_hari}} {{$j->jadwal_jam_mulai}}</option>
+								<option value="{{$j->jadwal_id}}">{{$j->jadwal_nama}} | {{$hari[$j->jadwal_hari]}} {{$j->jadwal_jam_mulai}}</option>
 							@endforeach
 						</select>
 						<br/>
-						Durasi (menit) : <input type="number" name="running_duration" step="5" min="0" max="120" value="0" class="form-control" placeholder="durasi (menit)"  /> <br/>
+						Durasi (menit) : <input type="number" name="running_duration" step="5" min="0" max="99999999999999999999" value="0" class="form-control" placeholder="durasi (menit)"  /> <br/>
                         {{ Form::hidden('praktikum_id', $praktikum->praktikum_id) }}
                     </div>
                     <div class="modal-footer">

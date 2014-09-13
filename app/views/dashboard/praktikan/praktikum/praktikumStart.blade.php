@@ -1,5 +1,5 @@
 @include('header')
-@include('menu')
+@include('dashboard/praktikan/menu_praktikan')
 	<link rel="stylesheet" type="text/css" href="js/bootstrap-fileupload/bootstrap-fileupload.css" />
     <link rel="stylesheet" type="text/css" href="js/bootstrap-wysihtml5/bootstrap-wysihtml5.css" />
 	<link href="js/iCheck/skins/minimal/minimal.css" rel="stylesheet">
@@ -119,12 +119,17 @@
                          </span>
                     </header>
                     <div class="panel-body">
-                        <form action="/praktikum/update3" method="POST" id="formData" class="form-horizontal ">
+                        <form action="/praktikum/update3" files="true"  method="POST" id="formData" class="form-horizontal" enctype="multipart/form-data">
 							<input type="hidden" name="soal_id" value="{{$so->soal_id}}">
 							<input type="hidden" name="link" value="<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">
                             <div class="form-group">
                                 <label class="col-md-12">{{$so->soal_text}}</label>
                                 <div class="col-md-12">
+									<?php
+										if($getJawaban->jawaban_user_text!=null){
+											echo "Jawaban Telah Tersimpan ";
+										}
+									?>
                                     <input type="file" name="berkas" class="default form-control" />
 									<button type="submit" name="submit" class="btn btn-warning" >Simpan Jawaban</button>
                                 </div>
@@ -182,7 +187,10 @@
 					$i=1;
 					//shuffle($soal);
 				?>
-				<a href="/praktikum/start/{{$run}}/{{$quiz}}/0" class="btn btn-info" type="button">0</a>
+				<form method="POST">
+					<input type="hidden" name=""
+				</form>			
+				<a href="/praktikum/start/{{$run}}/{{$quiz}}/0" class="btn btn-info" type="button">Pembukaan</a>
 				@foreach($soal as $s)
 				<?php
 					if($s->soal_id==$no){
@@ -194,6 +202,7 @@
 				<?php } 
 				$i++; ?>
 				@endforeach
+					<a onclick="return confirm('anda yakin dengan semua jawaban anda ?');" href="/praktikum/start/{{$run}}/{{$quiz}}/0" class="btn btn-info" type="button">Selesai</a>
 				</div>
 				
 			</div>
@@ -291,9 +300,9 @@ setInterval(function () {
 		window.location.href = "/praktikan";
 	}else{
 		// format countdown string + set tag value
-		;  
 		
-		countdown.innerHTML = "<p class=\"text-muted\" ><h1 align=\"center\">"+ hours + "h, "	+ minutes + "m, " + seconds + "s"+" </h1></p><div class=\"progress progress-striped active progress-sm\"> <div  class=\"progress-bar progress-bar-warning\"  role=\"progressbar\" aria-valuenow=\""+seconds_left+"\" aria-valuemin=\"0\" aria-valuemax=\"{{$getTimer->buka_quiz_durasi}}\" style=\"width: "+seconds_left/{{$getTimer->buka_quiz_durasi}}+"%\"><span ></span></div></div>"
+		
+		countdown.innerHTML = "<p class=\"text-muted\" ><h1 align=\"center\">"+days +" HARI "+ hours + " JAM "	+ minutes + " MENIT " + seconds + " DETIK "+" </h1></p><div class=\"progress progress-striped active progress-sm\"> <div  class=\"progress-bar progress-bar-warning\"  role=\"progressbar\" aria-valuenow=\""+seconds_left+"\" aria-valuemin=\"0\" aria-valuemax=\"{{$getTimer->buka_quiz_durasi}}\" style=\"width: "+seconds_left/{{$getTimer->buka_quiz_durasi}}+"%\"><span ></span></div></div>"
 		
 	}
     

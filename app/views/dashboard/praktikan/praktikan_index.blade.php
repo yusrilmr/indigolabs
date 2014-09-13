@@ -42,9 +42,11 @@
 						
 					</div>
 					<ul class="event-list">
-					<?php $i=1 ?>
+					<?php $i=1;
+						$hari = array('minggu','senin','selesa','rabu','kamis','jumat','sabtu');
+					?>
 						@foreach($data as $d)
-						<li>{{$i}} {{$d->praktikum_nama}} | {{$d->jadwal_hari}} {{$d->jadwal_jam_mulai}} - {{$d->jadwal_jam_selesai}} <a href="praktikum/list/{{$d->running_id}}" class="event-close"><i class="fa fa-play"></i></a></li>                    
+						<li>{{$i}}. {{$d->praktikum_nama}} | {{$hari[$d->jadwal_hari]}} {{$d->jadwal_jam_mulai}} - {{$d->jadwal_jam_selesai}} <a href="praktikum/list/{{$d->running_id}}" class="event-close"><i class="fa fa-play"></i></a></li>                    
 						<?php $i++ ?>
 						@endforeach
 						

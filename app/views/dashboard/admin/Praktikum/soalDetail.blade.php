@@ -1,5 +1,5 @@
 @include('header')
-@include('menu')
+@include('dashboard/admin/menu_admin')
 <!--main content start-->
     <section id="main-content">
         <section class="wrapper">
@@ -71,19 +71,33 @@
                                 <tbody>
                                 
 								<?php $i=1 ?>
-								@foreach($soals as $soal)
+								@foreach($soals as $key => $soal)
                                         <tr class="">
                                             <td><?php echo $i?></td>
-                                            <td>{{ $soal->soal_text }}</td>
+                                            <td><?php echo substr($soal->soal_text,0,160) ?>
+											<input type="hidden" id="soalnya" value="{{$soal->soal_text}}" name="soal_text">
+											</td>
                                             <td>{{ $soal->soal_point }}</td>
-                                            <td>{{ $soal->soal_type }}</td>
+                                            <td>
+											
+											<?php
+												if($soal->soal_type == 1){
+													echo "Pilihan Ganda";
+												}else if($soal->soal_type == 2){
+													echo "Essay";
+												}else if($soal->soal_type == 3){
+													echo "Upload File";
+												}
+											?></td>
                                             <td></td>
                                             <td>
-                                                <button onclick="getEdit();" type="button" data-toggle="modal" href="#myModal-2" class="btn btn-warning">Edit</button>
+												<input type="hidden" id=lihatSoal[{{$key}}] value='{{$soal->soal_text}}' />
+                                                <button onclick="getEdit({{$key}});" type="button" data-toggle="modal" href="#modalView" class="btn btn-success">Lihat Soal</button>
                                             </td>
-                                            <td>
-                                                
+											<td>
+                                                <button onclick="getEdit();" type="button" data-toggle="modal" href="#myModal-2" class="btn btn-warning">Delete</button>
                                             </td>
+                                           
                                         </tr>
                                         <?php $i++ ?>
                                     @endforeach
@@ -108,6 +122,8 @@
 						
                         {{Form::open(array('action' => 'AdminController@storeSoal'))}}
 						<label>Soal : </label>
+						
+						<a href="/upload" target="_blank">Upload Berkas</a>
                         {{Form::textarea('soal_text', '', array('class' => 'form-control ckeditor', 'placeholder' => 'Detail Persoalan',  'rows'=>'6' ))}} <br/>
 						<label>Bobot Soal : </label>							
 							<input type="number" name="soal_point" step="5" min="0" max="100" value="0" class="form-control"  />
@@ -115,31 +131,31 @@
 						<label>Pilihan Jawaban : </label>
 						<div class="input-group m-bot15">
 							<span class="input-group-addon">
-								{{Form::checkbox('kunciSoalA', 'true', array('class' => 'form-control'))}}
+								{{Form::radio('kunci', 'A', array('class' => 'form-control'))}}
 							</span>
 							{{Form::text('pilihanA', '', array('class' => 'form-control', 'placeholder' => 'Pilihan Jawaban A' , 'required' ))}}
 						</div>
 						<div class="input-group m-bot15">
 							<span class="input-group-addon">
-								{{Form::checkbox('kunciSoalB', 'true', array('class' => 'form-control'))}}
+								{{Form::radio('kunci', 'B', array('class' => 'form-control'))}}
 							</span>
 							{{Form::text('pilihanB', '', array('class' => 'form-control', 'placeholder' => 'Pilihan Jawaban B' , 'required' ))}}
 						</div>
 						<div class="input-group m-bot15">
 							<span class="input-group-addon">
-								{{Form::checkbox('kunciSoalC', 'true', array('class' => 'form-control'))}}
+								{{Form::radio('kunci', 'C', array('class' => 'form-control'))}}
 							</span>
 							{{Form::text('pilihanC', '', array('class' => 'form-control', 'placeholder' => 'Pilihan Jawaban C' , 'required' ))}}
 						</div>
 						<div class="input-group m-bot15">
 							<span class="input-group-addon">
-								{{Form::checkbox('kunciSoalD', 'true', array('class' => 'form-control'))}}
+								{{Form::radio('kunci', 'D', array('class' => 'form-control'))}}
 							</span>
 							{{Form::text('pilihanD', '', array('class' => 'form-control', 'placeholder' => 'Pilihan Jawaban D' , 'required' ))}}
 						</div>
 						<div class="input-group m-bot15">
 							<span class="input-group-addon">
-								{{Form::checkbox('kunciSoalE', 'true', array('class' => 'form-control'))}}
+								{{Form::radio('kunci', 'E', array('class' => 'form-control'))}}
 							</span>
 							{{Form::text('pilihanE', '', array('class' => 'form-control', 'placeholder' => 'Pilihan Jawaba E' , 'required' ))}}
 						</div>
@@ -177,6 +193,7 @@
                     <div class="modal-body">
                        {{Form::open(array('action' => 'AdminController@storeSoal'))}}
 						<label>Soal :</label>
+						<a href="/upload" target="_blank">Upload Berkas</a>
                         {{Form::textarea('soal_text', '', array('class' => 'form-control ckeditor', 'placeholder' => 'Detail Persoalan', 'rows'=>'6' ))}} <br/>
 						<label>Bobot Soal : </label>							
 							<input type="number" name="soal_point" step="5" min="0" max="100" value="0" class="form-control"  /><br/>
@@ -209,6 +226,7 @@
                     <div class="modal-body">
                        {{Form::open(array('action' => 'AdminController@storeSoal'))}}
 						<label>Soal :</label>
+						<a href="/upload" target="_blank">Upload Berkas</a>
                         {{Form::textarea('soal_text', '', array('class' => 'form-control ckeditor', 'placeholder' => 'Detail Persoalan',  'rows'=>'6' ))}} <br/>
 						<label>Bobot Soal : </label>							
 							<input type="number" name="soal_point" step="5" min="0" max="100" value="0" class="form-control"  /><br/>
@@ -230,6 +248,28 @@
             </div>
         </div>
         <!-- END MODAL -->
+		
+		<div class="modal fade" id="modalView" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">View Soal</h4>
+                    </div>
+                    <div class="modal-body">
+                       
+						<div id="view_soal"></div>
+						
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                       
+                        <!-- <button class="btn btn-primary" type="button">Save changes</button> -->
+                        {{ Form::close() }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </section>
 <!--main content end-->
@@ -254,10 +294,11 @@ function getAdd(lab_id, praktikum_id, modul_id){
     document.getElementById("lab_id").value = lab_id;
     document.getElementById("modul_id").value = modul_id;
 }
-function getEdit(praktikum_id, praktikum_nama, praktikum_keterangan, lab_id){
-    document.getElementById("praktikum_id").value = praktikum_id;
-    document.getElementById("praktikum_nama").value = praktikum_nama;
-    document.getElementById("praktikum_keterangan").value = praktikum_keterangan;
-    document.getElementById("lab_id").value = lab_id;
+</script>
+<script>
+function getEdit(key){
+	var mmo = $('#lihatSoal['+key+']).data;
+    document.getElementById("view_soal").innerHTML = mmo;
+	//document.getElementById("view_soal").innerHTML + soal;
 }
 </script>

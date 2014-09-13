@@ -37,6 +37,12 @@
         <div class="form-signin">
                 <h2 class="form-signin-heading">Daftar Sekarang</h2>
                 <div class="login-wrap">
+				<div class="alert alert-warning">
+					PERHATIAN :
+					
+					Pastikan Nama,NIM, Kelas Anda benar, karena data tidak dapat dirubah kembali.
+					
+				</div>
                  <p>
                     @if(Session::has('pesan_error'))
                        <div class="alert alert-danger">{{ Session::get('pesan_error') }}</div>

@@ -40,6 +40,9 @@
         <div class="login-wrap">
             
             <div class="user-login-info">
+			@if(Session::has('success'))
+                   <div class="alert alert-info">{{ Session::get('success') }}</div>
+                @endif
             <p>
                @if(Session::has('pesan_error'))
                    <div class="alert alert-danger">{{ Session::get('pesan_error') }}</div>

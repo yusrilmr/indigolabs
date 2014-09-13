@@ -22,9 +22,9 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'sistem_praktikum_online',
-			'username'  => 'root',
-			'password'  => '',
+			'database'  => 'db_indigolabs',
+			'username'  => 'praktikum',
+			'password'  => 'pRakt1kUm!!!',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
